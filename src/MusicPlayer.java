@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
- 
+
 public class MusicPlayer {
 
 	static int currentSong = 0;
@@ -40,7 +40,7 @@ public class MusicPlayer {
 		System.out.println("2) Shuffle ");
 		System.out.println("3) Previous");
 		System.out.println("4) Next");
-		if(shuffled) {
+		if (shuffled) {
 			System.out.println("5) Unshuffle");
 		}
 		Scanner userInput = new Scanner(System.in);
@@ -73,6 +73,14 @@ public class MusicPlayer {
 		}
 	}
 
+	/**
+	 * Description : reading the songs from a CSV file
+	 *
+	 * @param fileName
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	public static ArrayList<String> readCSV(String fileName) throws FileNotFoundException, IOException {
 		ArrayList<String> songs = new ArrayList<>();
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -96,25 +104,22 @@ public class MusicPlayer {
 	}
 
 	/*
-	 * Description: Suffling playlist
+	 * Description: Suffling playlist using Fisher Yates Modern Algorithm
 	 */
 	public static void shuffle() {
 		shuffled = true;
-		currentSongName = songs.get(currentSong);
 		int i = songs.size();
-/*		System.out.println("Length of the arrayList : " + i + currentSongName);*/
 		int j;
 		String temp;
-		while (--i >= 0) {
+		while (--i > 0) {
 			double ran = Math.random();
 			j = (int) Math.floor(ran * (i + 1));
-			// System.out.println("j" + j);
 			temp = shuffledSongs.get(j);
 			shuffledSongs.set(j, shuffledSongs.get(i));
 			shuffledSongs.set(i, temp);
 		}
 		System.out.println("ShuffledSongs " + shuffledSongs.toString());
-		currentSong = shuffledSongs.indexOf(currentSongName);
+		currentSong = 0;
 		play();
 	}
 
@@ -124,9 +129,12 @@ public class MusicPlayer {
 	public static void playPrev() {
 		currentSong--;
 		if (currentSong < 0) {
-			currentSong = songs.size() - 1;
+			System.out.println("You have reached the starting of the playlist");
+			currentSong = 0;
+		} else {
+			play();
 		}
-		play();
+
 	}
 
 	/*
@@ -135,19 +143,21 @@ public class MusicPlayer {
 	public static void playNext() {
 		currentSong++;
 		if (currentSong > songs.size() - 1) {
-			currentSong = 0;
+			System.out.println("You have reached the end of the playlist");
+			currentSong = songs.size() - 1;
+		} else {
+			play();
 		}
-		play();
+
 	}
 
 	/*
 	 * Description: Unsuffling the playlist
 	 */
 	public static void unshuffle() {
-		if(shuffled) {
+		if (shuffled) {
 			shuffled = false;
-			currentSongName = shuffledSongs.get(currentSong);
-			currentSong = songs.indexOf(currentSongName);
+			currentSong = 0;
 			play();
 		}
 	}
